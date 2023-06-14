@@ -1,6 +1,7 @@
 package alston.homework.enumdemo;
 
-public enum Language implements Command{
+public enum Language implements Command {
+
     English {
         public void execute() {
             System.out.println("英文");
@@ -16,5 +17,6 @@ public enum Language implements Command{
             System.out.println("英文");
         }
     }
+
 }
 

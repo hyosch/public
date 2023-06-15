@@ -1,4 +1,4 @@
-package alston.homework.Encapsulation;
+package alston.homework1.Encapsulation;
 
 public class Person {
 

@@ -1,4 +1,4 @@
-package alston.homework.extend;
+package alston.homework1.extend;
 
 class Animal {
 

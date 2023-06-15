@@ -1,4 +1,4 @@
-package alston.homework;
+package alston.homework1;
 
 public class GenericClass<T> {
 

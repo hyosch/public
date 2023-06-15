@@ -1,4 +1,4 @@
-package alston.homework;
+package alston.homework1;
 
 import java.util.HashMap;
 

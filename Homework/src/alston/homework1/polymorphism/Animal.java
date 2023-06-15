@@ -1,4 +1,4 @@
-package alston.homework.polymorphism;
+package alston.homework1.polymorphism;
 
 //多型
 class Animal {

@@ -1,4 +1,4 @@
-package alston.homework.enumdemo;
+package alston.homework1.enumdemo;
 
 public enum Language implements Command {
 

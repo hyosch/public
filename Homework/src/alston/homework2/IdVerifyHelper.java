@@ -6,14 +6,45 @@ import java.util.List;
 
 public class IdVerifyHelper {
 
-    public static void main(String[] args) {
-        File file = new File("C:\\Alston\\code\\ide\\idea-202203\\workspace\\java_homework\\src\\alston\\homework2\\idList.txt");
+    public IdVerifyHelper() {}
+
+    public IdVerifyHelper(String fileName) {
+        List<VerifyResult> list = validate(fileName);
+        for (VerifyResult v : list) {
+            System.out.println(v);
+        }
+    }
+
+    public List<VerifyResult> validate(String fileName) {
+        List<String> idList = readFile(fileName);
+        List<VerifyResult> resultList = new ArrayList<>();
+        VerifyResult verifyResult;
+
+        for (int i = 0; i < idList.size(); i++) {
+            verifyResult = new VerifyResult();
+
+            if (verifyId(idList.get(i))) {
+                verifyResult.setVerifySuccess(true);
+                verifyResult.setId(idList.get(i));
+                verifyResult.setMessage("驗證成功");
+            } else {
+                verifyResult.setVerifySuccess(false);
+                verifyResult.setId(idList.get(i));
+                verifyResult.setMessage("驗證失敗");
+            }
+            resultList.add(verifyResult);
+        }
+
+        return resultList;
+    }
+
+    private List readFile(String fileName) {
         BufferedReader bf;
         List<String> idList;
         String idStr;
 
         try {
-            bf = new BufferedReader(new FileReader(file));
+            bf = getBufferReader(fileName);
             idList = new ArrayList<>();
 
             while ((idStr = bf.readLine()) != null) {
@@ -23,23 +54,16 @@ public class IdVerifyHelper {
             throw new RuntimeException(e);
         }
 
-        for (int i = 0; i < idList.size(); i++) {
-            boolean flag = verifyId(idList.get(i));
-
-            if (flag) {
-                System.out.println("====您輸入的身分證字號 " + idList.get(i) + " ====\n" +
-                        "====驗證成功====\n");
-            } else {
-                System.out.println("====您輸入的身分證字號 " + idList.get(i) + " ====\n" +
-                        "====驗證失敗====\n");
-            }
-        }
+        return idList;
     }
 
-    static boolean verifyId(String idStr) {
+    private BufferedReader getBufferReader(String fileName) throws FileNotFoundException {
+        return new BufferedReader(new FileReader(fileName));
+    }
+
+    private static boolean verifyId(String idStr) {
         String areaStr = "ABCDEFGHJKLMNPQRSTUVXYWZIO";
         if (!idStr.matches("[a-zA-Z][12]\\d{8}")) {
-
             return false;
         }
         idStr = idStr.toUpperCase();
@@ -52,10 +76,8 @@ public class IdVerifyHelper {
         int lastNum = idStr.charAt(10) - '0';
 
         if (sum % 10 == 10 - lastNum) {
-
             return true;
         } else if (sum % 10 == 0 && lastNum == 0) {
-
             return true;
         }
 

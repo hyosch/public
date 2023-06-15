@@ -1,22 +1,43 @@
 package alston.homework2;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 public class IdVerifyHelper {
 
-    public IdVerifyHelper() {}
+    List<VerifyResult> list;
+
+    public IdVerifyHelper() {
+    }
 
     public IdVerifyHelper(String fileName) {
-        List<VerifyResult> list = validate(fileName);
+        list = validate(fileName);
+    }
+
+    public void showResult() {
         for (VerifyResult v : list) {
             System.out.println(v);
         }
     }
 
     public List<VerifyResult> validate(String fileName) {
-        List<String> idList = readFile(fileName);
+        BufferedReader bf;
+        List<String> idList;
+        String idStr;
+
+        try {
+            bf = new BufferedReader(new FileReader(fileName));
+            idList = new ArrayList<>();
+
+            while ((idStr = bf.readLine()) != null) {
+                idList.add(idStr);
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
         List<VerifyResult> resultList = new ArrayList<>();
         VerifyResult verifyResult;
 
@@ -36,29 +57,6 @@ public class IdVerifyHelper {
         }
 
         return resultList;
-    }
-
-    private List readFile(String fileName) {
-        BufferedReader bf;
-        List<String> idList;
-        String idStr;
-
-        try {
-            bf = getBufferReader(fileName);
-            idList = new ArrayList<>();
-
-            while ((idStr = bf.readLine()) != null) {
-                idList.add(idStr);
-            }
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-
-        return idList;
-    }
-
-    private BufferedReader getBufferReader(String fileName) throws FileNotFoundException {
-        return new BufferedReader(new FileReader(fileName));
     }
 
     private static boolean verifyId(String idStr) {

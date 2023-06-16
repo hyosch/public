@@ -1,4 +1,4 @@
-package alston.homework2;
+package alston.homework2.demo;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -6,29 +6,13 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class IdVerifyHelper {
+public class IdVerifyHelperC02 extends IdVerifyHelper {
 
-    List<VerifyResult> list;
-
-    public IdVerifyHelper() {
+    public IdVerifyHelperC02(String fileName) {
+        super(fileName);
     }
 
-    public IdVerifyHelper(String fileName) {
-        list = validate(fileName);
-    }
-
-    public void showResult() {
-        for (VerifyResult v : list) {
-            if (v.getVerifySuccess()) {
-                System.out.println("====您輸入的身分證字號 " + v.getId() + " ====\n" +
-                        "====" + v.getMessage() + "====\n");
-            } else {
-                System.out.println("====您輸入的身分證字號 " + v.getId() + " ====\n" +
-                        "====" + v.getMessage() + "====\n");
-            }
-        }
-    }
-
+    @Override
     public List<VerifyResult> validate(String fileName) {
         BufferedReader bf;
         List<String> idList;
@@ -57,10 +41,15 @@ public class IdVerifyHelper {
         for (int i = 0; i < idList.size(); i++) {
             idStr = idList.get(i);
 
-            if (!idStr.matches("[A-Z][12]\\d{8}")) {
-                resultList.add(new VerifyResult(false, idList.get(i), "驗證失敗"));
+            if (!idStr.matches("[a-zA-Z0-9]+")) {
+                resultList.add(new VerifyResult(false, idStr, "證號格式錯誤*"));
                 continue;
             }
+            if (idStr.length() != 10) {
+                resultList.add(new VerifyResult(false, idStr, "驗證失敗*"));
+                continue;
+            }
+            idStr = idStr.toUpperCase();
             idStr = (areaStr.indexOf(idStr.charAt(0)) + 10) + idStr.substring(1);
             int sum = idStr.charAt(0) - '0';
 

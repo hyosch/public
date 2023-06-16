@@ -1,4 +1,4 @@
-package alston.homework2;
+package alston.homework2.demo;
 
 public class VerifyResult {
 

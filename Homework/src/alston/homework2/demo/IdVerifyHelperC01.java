@@ -1,4 +1,4 @@
-package alston.homework2;
+package alston.homework2.demo;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -6,9 +6,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class IdVerifyHelperC02 extends IdVerifyHelper {
+public class IdVerifyHelperC01 extends IdVerifyHelper {
 
-    public IdVerifyHelperC02(String fileName) {
+    public IdVerifyHelperC01(String fileName) {
         super(fileName);
     }
 
@@ -41,15 +41,14 @@ public class IdVerifyHelperC02 extends IdVerifyHelper {
         for (int i = 0; i < idList.size(); i++) {
             idStr = idList.get(i);
 
-            if (!idStr.matches("[a-zA-Z0-9]+")) {
-                resultList.add(new VerifyResult(false, idStr, "證號格式錯誤*"));
-                continue;
-            }
             if (idStr.length() != 10) {
-                resultList.add(new VerifyResult(false, idStr, "驗證失敗"));
+                resultList.add(new VerifyResult(false, idStr, "證號長度不為10"));
                 continue;
             }
-            idStr = idStr.toUpperCase();
+            if (!idStr.matches("[A-Z]\\d{9}")) {
+                resultList.add(new VerifyResult(false, idStr, "證號格式錯誤"));
+                continue;
+            }
             idStr = (areaStr.indexOf(idStr.charAt(0)) + 10) + idStr.substring(1);
             int sum = idStr.charAt(0) - '0';
 

@@ -1,4 +1,4 @@
-package alston.homework2;
+package alston.homework2.demo;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -6,13 +6,29 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class IdVerifyHelperC01 extends IdVerifyHelper {
+public class IdVerifyHelper {
 
-    public IdVerifyHelperC01(String fileName) {
-        super(fileName);
+    List<VerifyResult> list;
+
+    public IdVerifyHelper() {
     }
 
-    @Override
+    public IdVerifyHelper(String fileName) {
+        list = validate(fileName);
+    }
+
+    public void showResult() {
+        for (VerifyResult v : list) {
+            if (v.getVerifySuccess()) {
+                System.out.println("====您輸入的身分證字號 " + v.getId() + " ====\n" +
+                        "====" + v.getMessage() + "====\n");
+            } else {
+                System.out.println("====您輸入的身分證字號 " + v.getId() + " ====\n" +
+                        "====" + v.getMessage() + "====\n");
+            }
+        }
+    }
+
     public List<VerifyResult> validate(String fileName) {
         BufferedReader bf;
         List<String> idList;
@@ -41,12 +57,8 @@ public class IdVerifyHelperC01 extends IdVerifyHelper {
         for (int i = 0; i < idList.size(); i++) {
             idStr = idList.get(i);
 
-            if (idStr.length() != 10) {
-                resultList.add(new VerifyResult(false, idStr, "證號長度不為10"));
-                continue;
-            }
-            if (!idStr.matches("[A-Z]\\d{9}")) {
-                resultList.add(new VerifyResult(false, idStr, "證號格式錯誤"));
+            if (!idStr.matches("[A-Z][12]\\d{8}")) {
+                resultList.add(new VerifyResult(false, idList.get(i), "驗證失敗"));
                 continue;
             }
             idStr = (areaStr.indexOf(idStr.charAt(0)) + 10) + idStr.substring(1);

@@ -29,21 +29,24 @@ public class IdVerifyHelperC01 extends IdVerifyHelper {
             throw new RuntimeException(e);
         }
 
-        List<VerifyResult> resultList = new ArrayList<>();
+        return verifyId(idList);
+    }
+
+    private List<VerifyResult> verifyId(List<String> idList) {
         String areaStr = "ABCDEFGHJKLMNPQRSTUVXYWZIO";
-        String idOriginal;
+        List<VerifyResult> resultList = new ArrayList<>();
         String idStr;
-        Boolean isValidated;
+        Boolean flag;
 
         for (int i = 0; i < idList.size(); i++) {
-            idOriginal = idStr = idList.get(i);
+            idStr = idList.get(i);
 
             if (idStr.length() != 10) {
-                resultList.add(new VerifyResult(false, idOriginal, "證號長度不為10"));
+                resultList.add(new VerifyResult(false, idStr, "證號長度不為10"));
                 continue;
             }
             if (!idStr.matches("[A-Z]\\d{9}")) {
-                resultList.add(new VerifyResult(false, idOriginal, "證號格式錯誤"));
+                resultList.add(new VerifyResult(false, idStr, "證號格式錯誤"));
                 continue;
             }
             idStr = (areaStr.indexOf(idStr.charAt(0)) + 10) + idStr.substring(1);
@@ -55,17 +58,17 @@ public class IdVerifyHelperC01 extends IdVerifyHelper {
             int lastNum = idStr.charAt(10) - '0';
 
             if (sum % 10 == 10 - lastNum) {
-                isValidated = true;
+                flag = true;
             } else if (sum % 10 == 0 && lastNum == 0) {
-                isValidated = true;
+                flag = true;
             } else {
-                isValidated = false;
+                flag = false;
             }
 
-            if (isValidated) {
-                resultList.add(new VerifyResult(true, idOriginal, "驗證成功"));
+            if (flag) {
+                resultList.add(new VerifyResult(true, idList.get(i), "驗證成功"));
             } else {
-                resultList.add(new VerifyResult(false, idOriginal, "驗證失敗"));
+                resultList.add(new VerifyResult(false, idList.get(i), "驗證失敗"));
             }
         }
 

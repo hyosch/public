@@ -45,20 +45,22 @@ public class IdVerifyHelper {
             throw new RuntimeException(e);
         }
 
-        List<VerifyResult> resultList = new ArrayList<>();
+        return verifyId(idList);
+    }
+
+    private List<VerifyResult> verifyId(List<String> idList) {
         String areaStr = "ABCDEFGHJKLMNPQRSTUVXYWZIO";
-        String idOriginal;
+        List<VerifyResult> resultList = new ArrayList<>();
         String idStr;
-        Boolean isValidated;
+        Boolean flag;
 
         for (int i = 0; i < idList.size(); i++) {
-            idOriginal = idStr = idList.get(i);
+            idStr = idList.get(i);
 
-            if (!idStr.matches("[a-zA-Z][12]\\d{8}")) {
-                resultList.add(new VerifyResult(false, idOriginal, "驗證失敗"));
+            if (!idStr.matches("[A-Z][12]\\d{8}")) {
+                resultList.add(new VerifyResult(false, idList.get(i), "驗證失敗"));
                 continue;
             }
-            idStr = idStr.toUpperCase();
             idStr = (areaStr.indexOf(idStr.charAt(0)) + 10) + idStr.substring(1);
             int sum = idStr.charAt(0) - '0';
 
@@ -68,43 +70,21 @@ public class IdVerifyHelper {
             int lastNum = idStr.charAt(10) - '0';
 
             if (sum % 10 == 10 - lastNum) {
-                isValidated = true;
+                flag = true;
             } else if (sum % 10 == 0 && lastNum == 0) {
-                isValidated = true;
+                flag = true;
             } else {
-                isValidated = false;
+                flag = false;
             }
 
-            if (isValidated) {
-                resultList.add(new VerifyResult(true, idOriginal, "驗證成功"));
+            if (flag) {
+                resultList.add(new VerifyResult(true, idList.get(i), "驗證成功"));
             } else {
-                resultList.add(new VerifyResult(false, idOriginal, "驗證失敗"));
+                resultList.add(new VerifyResult(false, idList.get(i), "驗證失敗"));
             }
         }
 
         return resultList;
-    }
-
-    private boolean verifyId(String idStr) {
-        String areaStr = "ABCDEFGHJKLMNPQRSTUVXYWZIO";
-        if (!idStr.matches("[a-zA-Z][12]\\d{8}")) {
-            return false;
-        }
-        idStr = idStr.toUpperCase();
-        idStr = (areaStr.indexOf(idStr.charAt(0)) + 10) + idStr.substring(1);
-        int sum = idStr.charAt(0) - '0';
-
-        for (int i = 1; i < idStr.length(); i++) {
-            sum = sum + ((idStr.charAt(i) - '0') * (10 - i));
-        }
-        int lastNum = idStr.charAt(10) - '0';
-
-        if (sum % 10 == 10 - lastNum) {
-            return true;
-        } else if (sum % 10 == 0 && lastNum == 0) {
-            return true;
-        }
-        return false;
     }
 
 }

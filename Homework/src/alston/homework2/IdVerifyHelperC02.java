@@ -6,29 +6,13 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class IdVerifyHelper {
+public class IdVerifyHelperC02 extends IdVerifyHelper {
 
-    List<VerifyResult> list;
-
-    public IdVerifyHelper() {
+    public IdVerifyHelperC02(String fileName) {
+        super(fileName);
     }
 
-    public IdVerifyHelper(String fileName) {
-        list = validate(fileName);
-    }
-
-    public void showResult() {
-        for (VerifyResult v : list) {
-            if (v.getVerifySuccess()) {
-                System.out.println("====您輸入的身分證字號 " + v.getId() + " ====\n" +
-                        "====" + v.getMessage() + "====\n");
-            } else {
-                System.out.println("====您輸入的身分證字號 " + v.getId() + " ====\n" +
-                        "====" + v.getMessage() + "====\n");
-            }
-        }
-    }
-
+    @Override
     public List<VerifyResult> validate(String fileName) {
         BufferedReader bf;
         List<String> idList;
@@ -54,7 +38,11 @@ public class IdVerifyHelper {
         for (int i = 0; i < idList.size(); i++) {
             idOriginal = idStr = idList.get(i);
 
-            if (!idStr.matches("[a-zA-Z][12]\\d{8}")) {
+            if (!idStr.matches("[a-zA-Z0-9]+")) {
+                resultList.add(new VerifyResult(false, idOriginal, "證號格式錯誤*"));
+                continue;
+            }
+            if (idStr.length() != 10) {
                 resultList.add(new VerifyResult(false, idOriginal, "驗證失敗"));
                 continue;
             }
@@ -83,28 +71,6 @@ public class IdVerifyHelper {
         }
 
         return resultList;
-    }
-
-    private boolean verifyId(String idStr) {
-        String areaStr = "ABCDEFGHJKLMNPQRSTUVXYWZIO";
-        if (!idStr.matches("[a-zA-Z][12]\\d{8}")) {
-            return false;
-        }
-        idStr = idStr.toUpperCase();
-        idStr = (areaStr.indexOf(idStr.charAt(0)) + 10) + idStr.substring(1);
-        int sum = idStr.charAt(0) - '0';
-
-        for (int i = 1; i < idStr.length(); i++) {
-            sum = sum + ((idStr.charAt(i) - '0') * (10 - i));
-        }
-        int lastNum = idStr.charAt(10) - '0';
-
-        if (sum % 10 == 10 - lastNum) {
-            return true;
-        } else if (sum % 10 == 0 && lastNum == 0) {
-            return true;
-        }
-        return false;
     }
 
 }

@@ -1,18 +1,38 @@
 package com.alston.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+import javax.persistence.*;
+
+@Entity
+@Table(name = "member")
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Member {
 
+    @Id
+    @GeneratedValue
+    @Column(name = "MEMBER_ID")
     String id;
+
+    @Column(name = "MEMBER_NAME")
     String name;
+
+    @Column(name = "GENDER")
     String gender;
 
-    public Member() {
-    }
+    @Column(name = "SUBJECT")
+    String subject;
 
-    public Member(String id, String name, String gender) {
-        this.id = id;
-        this.name = name;
-        this.gender = gender;
+    @Column(name = "JOB_TITLE")
+    String jobTitle;
+
+    @Column(name = "CLASS")
+    String studentClass;
+
+    @Column(name = "ADMISSION_YEAR_MONTH")
+    String admissionYearMonth;
+
+    public Member() {
     }
 
     public String getId() {
@@ -37,6 +57,38 @@ public class Member {
 
     public void setGender(String gender) {
         this.gender = gender;
+    }
+
+    public String getSubject() {
+        return subject;
+    }
+
+    public void setSubject(String subject) {
+        this.subject = subject;
+    }
+
+    public String getJobTitle() {
+        return jobTitle;
+    }
+
+    public void setJobTitle(String jobTitle) {
+        this.jobTitle = jobTitle;
+    }
+
+    public String getStudentClass() {
+        return studentClass;
+    }
+
+    public void setStudentClass(String studentClass) {
+        this.studentClass = studentClass;
+    }
+
+    public String getAdmissionYearMonth() {
+        return admissionYearMonth;
+    }
+
+    public void setAdmissionYearMonth(String admissionYearMonth) {
+        this.admissionYearMonth = admissionYearMonth;
     }
 
 }

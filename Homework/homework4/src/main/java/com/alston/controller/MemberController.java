@@ -18,27 +18,27 @@ public class MemberController {
     MemberService memberService;
 
     @GetMapping("/all-member")
-    public List<Member> members() {
+    public List<Member> getAllMember() {
         return memberService.getAllMember();
     }
 
     @GetMapping("/all-teacher")
-    public List<Member> teachers() {
+    public List<Member> getAllTeacher() {
         return memberService.getAllTeacher();
     }
 
     @GetMapping("/all-student")
-    public List<Member> students() {
+    public List<Member> getAllStudent() {
         return memberService.getAllStudent();
     }
 
     @GetMapping("/teacher")
-    public List<Member> teacher(@RequestParam String teacherId) {
+    public Member getTeacher(@RequestParam String teacherId) {
         return memberService.getTeacher(teacherId);
     }
 
     @GetMapping("/student")
-    public List<Member> student(@RequestParam String studentId) {
+    public Member getStudent(@RequestParam String studentId) {
         return memberService.getStudent(studentId);
     }
 

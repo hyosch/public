@@ -1,17 +1,20 @@
 package com.alston.model;
 
+import javax.persistence.Column;
+import javax.persistence.DiscriminatorValue;
+import javax.persistence.Entity;
+
+@Entity
+@DiscriminatorValue(value="teacher")
 public class Teacher extends Member {
 
-    String subject;
-    String jobTitle;
+    @Column(name = "SUBJECT")
+    private String subject;
+
+    @Column(name = "JOB_TITLE")
+    private String jobTitle;
 
     public Teacher() {
-    }
-
-    public Teacher(String id, String name, String gender, String subject, String jobTitle) {
-        super(id, name, gender);
-        this.subject = subject;
-        this.jobTitle = jobTitle;
     }
 
     public String getSubject() {

@@ -15,7 +15,7 @@ import java.util.List;
 public class MemberController {
 
     @Autowired
-    MemberService memberService;
+    private MemberService memberService;
 
     @GetMapping("/all-member")
     public List<Member> getAllMember() {

@@ -1,6 +1,7 @@
 package com.alston.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 
@@ -13,8 +14,9 @@ import javax.persistence.*;
 public class Member {
 
     @Id
-    @GeneratedValue
     @Column(name = "MEMBER_ID")
+    @GeneratedValue(generator="nano_id")
+    @GenericGenerator(name="nano_id", strategy = "com.alston.utils.IdGenerator")
     private String id;
 
     @Column(name = "MEMBER_NAME")

@@ -1,7 +1,6 @@
 package com.alston.service;
 
 import com.alston.model.Member;
-import com.alston.model.Student;
 import com.alston.model.Teacher;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

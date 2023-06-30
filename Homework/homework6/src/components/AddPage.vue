@@ -1,12 +1,18 @@
 <template>
-  <div class="container-lg w-50 p-3" style="margin: 100px auto;">
-    <h1>新增功能</h1>
-    <form style="margin-top: 50px;">
-      <div class="form-outline mb-4">
+  <div class="container-lg w-50 p-3">
+    <header class="bg-white shadow-lg w-full z-30 fixed" style="margin-bottom: 100px; text-align: center">
+      <div class="h-16 flex justify-center items-center">
+        <h1 v-if="isEdit">修改</h1>
+        <h1 v-else>新增</h1>
+      </div>
+    </header>
+
+    <form class="row g-3" style="margin-top: 50px;">
+      <div class="col-md-6">
         <label class="form-label" for="form2Example1">姓名</label>
         <input type="text" id="form2Example1" class="form-control" v-model="member.name" />
       </div>
-      <div class="form-outline mb-4">
+      <div class="col-md-6">
         <label class="form-label" for="form2Example2">性別</label>
         <select id="form2Example2" class="form-select" aria-label="select" v-model="member.gender">
           <option value="male" selected>
@@ -79,25 +85,25 @@
         <label class="form-label" for="form2Example3">入學年度</label>
         <input type="text" id="form2Example3" class="form-control" v-model="member.admissionYearMonth" />
       </div>
-
-
-      <button type="button" class="btn btn-primary btn-block" @click="addMember(member)">新增</button>
-      <button type="button" class="btn btn-primary btn-danger" @click="clearAdd()">
-        <font-awesome-icon icon="trash-can" />
-      </button>
+      <div style="margin-top: 30px;" class="row justify-content-end">
+        <div class="col-2">
+          <button type="button" class="btn btn-outline-primary" v-if="isEdit" @keyup.enter="addMember(member)"
+            @click="addMember(member)">儲存</button>
+          <button type="button" class="btn btn-outline-primary" v-else @keyup.enter="addMember(member)"
+            @click="addMember(member)">新增</button>
+        </div>
+        <div class="col-2">
+          <button type="button" class="btn btn-outline-danger" @click="router.go(-1)">取消</button>
+        </div>
+      </div>
     </form>
-
-
   </div>
 </template>
 
 <script setup>
-
-import { reactive } from 'vue'
+import { reactive, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import axios from 'axios'
-
-/* <!--  ================= 新增功能 =================  --> */
 
 const router = useRouter()
 const route = useRoute()
@@ -112,14 +118,14 @@ let member = reactive({
   admissionYearMonth: ''
 })
 
-let isEdit = false
+const isEdit = ref(false)
 
 if (route.query.isEdit === 'true') {
-  isEdit = true
+  isEdit.value = true
   queryMember(route.query.id, route.query.subject)
 }
 
-function addMember(member) {
+const addMember = (member) => {
   if (member.id != '') {
     updateMember(member)
     return
@@ -136,7 +142,7 @@ function addMember(member) {
         router.push('/')
       }
     })
-    .catch(function (error) { console.log(error) })
+    .catch((e) => { console.log(e) })
 }
 
 function queryMember(id, subject) {
@@ -163,7 +169,7 @@ function queryMember(id, subject) {
     .catch(function (error) { console.log(error) })
 }
 
-function updateMember(member) {
+const updateMember = (member) => {
   let url = 'teacher'
   if (member.subject === undefined) {
     url = 'student'
@@ -175,9 +181,8 @@ function updateMember(member) {
         router.push('/')
       }
     })
-    .catch(function (error) { console.log(error) })
+    .catch((e) => { console.log(e) })
 }
-
 </script>
 
 <style>
@@ -185,7 +190,6 @@ function updateMember(member) {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  text-align: center;
   color: #2c3e50;
   margin-top: 60px;
 }

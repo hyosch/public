@@ -1,15 +1,16 @@
 <template>
   <div>
-    <router-view />
+    <router-view @reload="updateComponent" :key="renderKey" />
   </div>
 </template>
   
-<script>
+<script setup>
+import { ref } from 'vue'
 
-export default {
-  name: 'App',
-  components: {
-  }
+const renderKey = ref(0)
+
+const updateComponent = () => {
+  renderKey.value += 1
 }
 </script>
 
@@ -18,7 +19,6 @@ export default {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  text-align: center;
   color: #2c3e50;
   margin-top: 60px;
 }

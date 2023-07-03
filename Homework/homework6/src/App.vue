@@ -3,15 +3,15 @@
     <router-view @reload="updateComponent" :key="renderKey" />
   </div>
 </template>
-  
-<script setup>
-import { ref } from 'vue'
 
-const renderKey = ref(0)
+<script setup>
+import { ref } from "vue";
+
+const renderKey = ref(0);
 
 const updateComponent = () => {
-  renderKey.value += 1
-}
+  renderKey.value += 1;
+};
 </script>
 
 <style>

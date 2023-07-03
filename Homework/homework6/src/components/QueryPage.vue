@@ -134,22 +134,22 @@
 </template>
 
 <script setup>
-import { reactive, ref, defineEmits } from "vue";
-import axios from "axios";
+import { reactive, ref, defineEmits } from 'vue';
+import axios from 'axios';
 
 const member = reactive({
-  name: "",
-  gender: "",
-  subject: "",
-  jobTitle: "",
-  studentClass: "",
-  admissionYearMonth: "",
+  name: '',
+  gender: '',
+  subject: '',
+  jobTitle: '',
+  studentClass: '',
+  admissionYearMonth: '',
 });
 member;
 
-const emit = defineEmits(["reload"]);
+const emit = defineEmits(['reload']);
 const reload = () => {
-  emit("reload");
+  emit('reload');
 };
 
 const memberList = ref([]);
@@ -158,13 +158,13 @@ const studentList = ref([]);
 const resultList = ref([]);
 
 const input = ref({
-  id: "",
-  jobTitle: "",
+  id: '',
+  jobTitle: '',
 });
 
 const getMembers = () => {
   axios
-    .get("http://localhost:8080/rest/all-member")
+    .get('http://localhost:8080/rest/all-member')
     .then((response) => {
       memberList.value = response.data;
       query();
@@ -177,7 +177,7 @@ getMembers();
 
 const getTeachers = () => {
   axios
-    .get("http://localhost:8080/rest/all-teacher")
+    .get('http://localhost:8080/rest/all-teacher')
     .then((response) => {
       teacherList.value = response.data;
     })
@@ -189,7 +189,7 @@ getTeachers();
 
 const getStudents = () => {
   axios
-    .get("http://localhost:8080/rest/all-student")
+    .get('http://localhost:8080/rest/all-student')
     .then((response) => {
       studentList.value = response.data;
     })
@@ -200,12 +200,12 @@ const getStudents = () => {
 getStudents();
 
 const deleteMember = (memberId, subject) => {
-  let url = "teacher/";
+  let url = 'teacher/';
   if (subject === undefined) {
-    url = "student/";
+    url = 'student/';
   }
   axios
-    .delete("http://localhost:8080/rest/" + url + memberId)
+    .delete('http://localhost:8080/rest/' + url + memberId)
     .then(() => {
       reload();
     })
@@ -219,28 +219,29 @@ const query = () => {
   const inputJobTitle = input.value.jobTitle;
   resultList.value = [];
 
-  if (inputId === "" && inputJobTitle === "") {
+  if (inputId === '' && inputJobTitle === '') {
     resultList.value = memberList.value;
-  } else if (inputId === "" && inputJobTitle === "teacher") {
+  } else if (inputId === '' && inputJobTitle === 'teacher') {
     resultList.value = teacherList.value;
-  } else if (inputId === "" && inputJobTitle === "student") {
+  } else if (inputId === '' && inputJobTitle === 'student') {
     resultList.value = studentList.value;
   } else if (inputId != null) {
-    input.value.jobTitle = "";
+    input.value.jobTitle = '';
     for (let i = 0; i < memberList.value.length; i++) {
       if (inputId === memberList.value[i].id) {
         resultList.value.push(memberList.value[i]);
+        return;
       }
     }
-    alert("查無資料");
+    console.log('查無資料');
   } else {
-    console.log("怪怪的...");
+    console.log('怪怪的...');
   }
 };
 
 const clear = () => {
-  input.value.id = "";
-  input.value.jobTitle = "";
+  input.value.id = '';
+  input.value.jobTitle = '';
   resultList.value = [];
 };
 </script>

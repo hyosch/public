@@ -165,46 +165,46 @@
 </template>
 
 <script setup>
-import { reactive, ref } from "vue";
-import { useRoute, useRouter } from "vue-router";
-import axios from "axios";
+import { reactive, ref } from 'vue';
+import { useRoute, useRouter } from 'vue-router';
+import axios from 'axios';
 
 const router = useRouter();
 const route = useRoute();
 
 let member = reactive({
-  id: "",
-  name: "",
-  gender: "",
-  subject: "",
-  jobTitle: "",
-  studentClass: "",
-  admissionYearMonth: "",
+  id: '',
+  name: '',
+  gender: '',
+  subject: '',
+  jobTitle: '',
+  studentClass: '',
+  admissionYearMonth: '',
 });
 
 const isEdit = ref(false);
 
-if (route.query.isEdit === "true") {
+if (route.query.isEdit === 'true') {
   isEdit.value = true;
   queryMember(route.query.id, route.query.subject);
 }
 
 const addMember = (member) => {
-  if (member.id != "") {
+  if (member.id != '') {
     updateMember(member);
     return;
   }
-  let url = "teacher";
+  let url = 'teacher';
 
-  if (member.subject == "") {
-    url = "student";
+  if (member.subject == '') {
+    url = 'student';
   }
   axios
-    .post("http://localhost:8080/rest/" + url, member)
+    .post('http://localhost:8080/rest/' + url, member)
     .then((response) => {
       if (response.status === 200) {
-        console.log("新增成功");
-        router.push("/");
+        console.log('新增成功');
+        router.push('/');
       }
     })
     .catch((e) => {
@@ -213,13 +213,13 @@ const addMember = (member) => {
 };
 
 function queryMember(id, subject) {
-  let url = "teacher?teacherId=";
+  let url = 'teacher?teacherId=';
 
   if (subject === undefined) {
-    url = "student?studentId=";
+    url = 'student?studentId=';
   }
   axios
-    .get("http://localhost:8080/rest/" + url + id)
+    .get('http://localhost:8080/rest/' + url + id)
     .then((response) => {
       if (response.status === 200) {
         let resp = response.data;
@@ -231,7 +231,7 @@ function queryMember(id, subject) {
         member.studentClass = resp.studentClass;
         member.admissionYearMonth = resp.admissionYearMonth;
       } else {
-        console.log("error");
+        console.log('error');
       }
     })
     .catch(function (error) {
@@ -240,16 +240,16 @@ function queryMember(id, subject) {
 }
 
 const updateMember = (member) => {
-  let url = "teacher";
+  let url = 'teacher';
   if (member.subject === undefined) {
-    url = "student";
+    url = 'student';
   }
   axios
-    .put("http://localhost:8080/rest/" + url, member)
+    .put('http://localhost:8080/rest/' + url, member)
     .then((response) => {
       if (response.status === 200) {
-        console.log("修改成功");
-        router.push("/");
+        console.log('修改成功');
+        router.push('/');
       }
     })
     .catch((e) => {

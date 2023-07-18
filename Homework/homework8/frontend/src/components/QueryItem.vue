@@ -1,88 +1,80 @@
 <template>
-  <div class="container-lg w-75 p-3">
-    <header
-      class="bg-white shadow-lg w-full z-30 fixed"
-      style="margin-bottom: 65px; text-align: center"
-    >
-      <div class="h-16 flex justify-center items-center" style="padding: 16px 0">
-        <h1>查詢</h1>
+  <div class="container-fluid">
+    <form>
+      <div class="row justify-content-center mb-1">
+        <div class="col-8 col-md-5 mb-3">
+          申請日期起訖
+          <Datepicker v-model="searchParams.date" format="yyyy-MM-dd" range />
+        </div>
+        <div class="col-8 col-md-5 mb-2">
+          <label for="validationDefault02" class="w-100"
+            >統一編號
+            <input
+              type="text"
+              class="form-control"
+              id="validationDefault02"
+              required
+              v-model="searchParams.ban"
+            />
+          </label>
+        </div>
       </div>
-    </header>
-    <div>
-      <form>
-        <div class="row">
-          <div class="col mb-3">
-            申請日期起訖
-            <Datepicker v-model="searchParams.date" format="yyyy-MM-dd" range />
-          </div>
-          <div class="col mb-3">
-            <label for="validationDefault02"
-              >統一編號
+      <div class="offset-2 offset-md-1 mb-2">
+        <div class="form-row d-inline-flex pe-3" v-for="(box, index) in checkbox" :key="index">
+          <div class="form-check mb-3 col">
+            <label class="form-check-label" :for="`checkBoxLabel${index}`">
               <input
-                type="text"
-                class="form-control"
-                id="validationDefault02"
+                class="form-check-input"
+                type="checkbox"
+                :value="box.char"
+                :id="`checkBoxLabel${index}`"
                 required
-                v-model="searchParams.ban"
+                v-model="searchParams.status"
+                @click="changeStatus(box.char)"
               />
+              {{ box.desc }}
             </label>
           </div>
         </div>
-        <div class="form-row d-inline-flex" v-for="(box, index) in checkbox" :key="index">
-          <div class="form-row d-inline-flex">
-            <div class="form-check mb-3 col">
-              <label class="form-check-label" :for="`checkBoxLabel${index}`">
-                <input
-                  class="form-check-input"
-                  type="checkbox"
-                  :value="box.char"
-                  :id="`checkBoxId${index}`"
-                  required
-                  v-model="searchParams.status"
-                  @click="changeStatus(box.char)"
-                />
-                {{ box.desc }}
-              </label>
-            </div>
-          </div>
-        </div>
-        <div class="justify-content-center d-flex">
-          <button class="btn btn-primary" style="margin-right: 20px" type="button">清除</button>
-          <button class="btn btn-primary" type="button" @click="queryApplies">查詢</button>
-        </div>
-      </form>
-    </div>
-    <div class="mt-50 mb-50" style="margin: 50px">
-      <table style="margin: 0 auto" class="table table-striped">
+      </div>
+      <div class="justify-content-center d-flex">
+        <button class="btn btn-primary" style="margin-right: 20px" type="button" @click="clear"
+          >清除</button
+        >
+        <button class="btn btn-primary" type="button" @click="queryApplies">查詢</button>
+      </div>
+    </form>
+    <div class="row justify-content-center">
+      <table class="table table-striped w-75 m-2 m-md-5">
         <thead>
           <tr>
-            <th scope="col">選擇</th>
-            <th scope="col">案件編號</th>
-            <th scope="col">服務名稱</th>
-            <th scope="col">統一編號</th>
-            <th scope="col">狀態</th>
-            <th scope="col">申請日期</th>
-            <th scope="col">備註</th>
-            <th scope="col">動作</th>
+            <th scope="col" class="mx-3 mb-2">選擇</th>
+            <th scope="col" class="mx-3 mb-2">案件編號</th>
+            <th scope="col" class="mx-3 mb-2">服務名稱</th>
+            <th scope="col" class="mx-3 mb-2">統一編號</th>
+            <th scope="col" class="mx-3 mb-2">狀態</th>
+            <th scope="col" class="mx-3 mb-2">申請日期</th>
+            <th scope="col" class="mx-3 mb-2">備註</th>
+            <th scope="col" class="mx-3 mb-2">動作</th>
           </tr>
         </thead>
         <tbody>
           <tr v-for="(apply, index) in applyList" :key="index">
-            <td>
+            <th scope="col">
               <label :for="`invalidCheck${apply.no}`">
                 <input
                   class="form-check-input"
                   type="checkbox"
-                  :value="`${apply.no}${apply.status}`"
+                  :value="`${apply.no}`"
                   :id="`invalidCheck${apply.no}`"
                   required
                   v-model="selected.array"
                   @click="checkIfAlbeUpdate(apply.status)"
                 />
               </label>
-            </td>
+            </th>
             <td>
-              {{ apply.caseNo }}
+              {{ apply.serviceCaseNo }}
             </td>
             <td>
               {{ apply.serviceName }}
@@ -94,7 +86,7 @@
               {{ apply.status }}
             </td>
             <td>
-              {{ apply.applyDate }}
+              {{ dayjs(apply.applyDate).format('YYYY-MM-DD') }}
             </td>
             <td>
               {{ apply.remark }}
@@ -105,6 +97,7 @@
                   path: '/about',
                   query: {
                     no: apply.no,
+                    serviceName: apply.serviceName,
                     serviceCaseNo: apply.serviceCaseNo,
                   },
                 }"
@@ -113,47 +106,51 @@
               </router-link>
             </td>
           </tr>
-          <div class="d-flex">
-            <button class="btn btn-primary" :disabled="isDisabled" @click="checkUpdate"
-              >核准</button
-            >
+          <div class="w-100 mt-5">
+            <button class="btn btn-primary" :disabled="isDisabled === false" @click="checkUpdate">
+              核准
+            </button>
           </div>
         </tbody>
       </table>
     </div>
+    <AlertItem v-if="isAlertVisible" @onAlertClose="onAlertClose" />
   </div>
 </template>
 
 <script setup>
 import { ref, reactive } from 'vue';
 import axios from 'axios';
+import router from '@/router/router';
 import Datepicker from '@vuepic/vue-datepicker';
 import '@vuepic/vue-datepicker/dist/main.css';
+import AlertItem from '@/components/AlertItem.vue';
+import dayjs from 'dayjs';
 
-const apply = ref({
-  ban: '',
-  caseNo: '',
-  serviceCaseNo: '',
-  applyDate: '',
-  no: '',
-  remark: '',
-  serviceName: '',
-  status: '',
-  approved: '',
-  lastModifiedBy: '',
-  lastModifiedIp: '',
-});
-console.log('apply', apply);
+const isAlertVisible = ref(false);
+const showAlert = () => {
+  console.log('show');
+  isAlertVisible.value = true;
+};
+const onAlertClose = () => {
+  console.log('close');
+  isAlertVisible.value = false;
+};
 
 const applyList = ref([]);
 
 const searchParams = ref({
   date: [],
-  ban: '',
+  ban: null,
   status: ['0'],
 });
 
 const queryApplies = () => {
+  console.log(searchParams);
+  if (searchParams.value.date === null) {
+    searchParams.value.date = [];
+  }
+
   axios
     .get('http://localhost:8080/api/v1/search', {
       params: {
@@ -177,33 +174,28 @@ queryApplies();
 const selected = reactive({
   array: [],
 });
-let isDisabled = ref(true);
-
-const noArray = [];
+let isDisabled = false;
 
 const checkIfAlbeUpdate = (status) => {
-  console.log(status);
   if (status === 'N' || status === 'Y') {
-    isDisabled = true;
-    alert('勾選資料含已處理或已退回資料');
+    isDisabled = false;
+    showAlert();
+    selected.array = [];
     return;
   }
   if (status === '0') {
-    isDisabled = false;
-    return;
+    isDisabled = true;
   }
-  isDisabled = false;
 };
 
 const checkUpdate = () => {
   console.log(selected.array);
   if (selected.array.length === 0) {
-    alert('未勾選核准資料');
     return;
   }
   axios
     .post('http://localhost:8080/api/v1/update', {
-      noArray,
+      noArray: selected.array,
       status: 'Y',
       account: 'account',
       ip: 'ip',
@@ -211,7 +203,8 @@ const checkUpdate = () => {
     .then((response) => {
       if (response.status === 200) {
         console.log(response.data);
-        queryApplies();
+      } else {
+        router.go(0);
       }
     })
     .catch((e) => {
@@ -228,6 +221,12 @@ const checkbox = [
 const changeStatus = (ch) => {
   searchParams.value.status = [];
   searchParams.value.status.push(ch);
+};
+
+const clear = () => {
+  searchParams.value.date = [];
+  searchParams.value.ban = null;
+  searchParams.value.status = ['0'];
 };
 </script>
 

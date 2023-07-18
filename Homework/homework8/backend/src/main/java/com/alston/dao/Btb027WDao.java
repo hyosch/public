@@ -1,8 +1,12 @@
 package com.alston.dao;
 
-import com.alston.dto.BtbType;
+import com.alston.controller.Btb027WController;
+import com.alston.dto.BtbIpInfo;
+import com.alston.dto.BtbIpType;
 import com.alston.dto.UpdateParam;
 import com.alston.model.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -20,7 +24,7 @@ public class Btb027WDao {
     private Btb027WRepository btb027WRepo;
 
     @Autowired
-    private BtbTypeRepository btbTypeRepository;
+    private BtbIpTypeRepository btbIpTypeRepository;
 
     @Autowired
     private BtbIp001Repository btbOafBtbRepo1;
@@ -40,13 +44,16 @@ public class Btb027WDao {
     @Autowired
     private BtbStatementRepository btbOafBtbIpRepo;
 
-//    @PersistenceContext
-//    private EntityManager em;
+    @Autowired
+    private BtbIpInfoRepository btbIpInfoRepo;
+
+    private final Logger log = LoggerFactory.getLogger(Btb027WController.class);
 
     public Page<BtbFirewallApply> findApplies(String ban, String status, Instant applyDate, Instant toDate, Integer from, Integer to) {
         return btb027WRepo.findAll((root, cq, cb) -> {
                     Predicate restrictions = cb.conjunction();
-                    if (ban != "") {
+                    log.info("ban {}", ban);
+                    if (ban != null) {
                         restrictions = cb.and(restrictions, cb.equal(root.get("ban"), ban));
                     }
                     if (status != null) {
@@ -66,52 +73,20 @@ public class Btb027WDao {
                 PageRequest.of(from, to, Sort.by(Sort.Direction.ASC, "no")));
     }
 
-//    public List getTest() {
-//        return btbOafBtbRepo.findAll((root, cq, cb) -> {
-//                    Predicate restrictions = cb.and(cb.equal(root.get("no"), "1"));
-//                    return restrictions;
-//                });
-//        CriteriaBuilder cb = em.getCriteriaBuilder();
-//        CriteriaQuery cq = cb.createQuery();
-//        Root<BtbOafBtb002> root = cq.from(BtbOafBtb002.class);
-//        cb.and(cb.equal(root.get("no"), "1"));
-//
-//        return em.createQuery(cq).getResultList();
-//    }
-
     public List<BtbOafBtb001Ip> findBtbIp(Integer serviceCaseNo) {
         return btbOafBtbIpRepo.findBtbIp(serviceCaseNo);
     }
 
-    public BtbOafBtb002 findBtb002(Integer no) {
-        return btbOafBtbRepo2.findBtb002(no);
-    }
-
-    public BtbOafBtb004 findBtb004(Integer no) {
-        return btbOafBtbRepo4.findBtb004(no);
+    public BtbIpInfo findBtbIpInfo(Integer no) {
+        return btbIpInfoRepo.findBtbIpInfo(no);
     }
 
     public Integer updateApply(BtbFirewallApply apply, UpdateParam updateParam) {
-        return btb027WRepo.updateApply(
-                apply.getNo(), updateParam.getAccount(), updateParam.getStatus(), apply.getRemark(), updateParam.getAccount(), updateParam.getIp());
-//        CriteriaBuilder cb = em.getCriteriaBuilder();
-//        CriteriaUpdate<BtbFirewallApply> cu = cb.createCriteriaUpdate(BtbFirewallApply.class);
-//
-//        Root<BtbFirewallApply> root = cu.from(BtbFirewallApply.class);
-//        cu.set("approved", btbApply.getApproved());
-//        cu.set("approvedDate", Instant.now());
-//        cu.set("status", "Y");
-//        cu.set("remark", btbApply.getRemark());
-//        cu.set("lastModifiedBy", btbApply.getLastModifiedBy());
-//        cu.set("lastModifiedDate", btbApply.getLastModifiedDate());
-//        cu.set("lastModifiedIp", btbApply.getLastModifiedIp());
-//        cu.set("lastModifiedFunc", btbApply.getLastModifiedFunc());
-//        cu.where(cb.equal(root.get("no"), btbApply.getNo()));
-//
-//        return em.createQuery(cu).executeUpdate();
+        return btb027WRepo.updateApply(apply.getNo(), updateParam.getAccount(), updateParam.getStatus(),
+                apply.getRemark(), updateParam.getAccount(), updateParam.getIp());
     }
 
-    public Integer updateBtbIp(Integer serviceCaseNo, String status, String approved, String account) {
+    public Integer updateBtbIp(Integer serviceCaseNo, String approved, String account) {
         if (btbOafBtbRepo1.existsById(serviceCaseNo)) {
             BtbOafBtb001 btbOafBtb001 = btbOafBtbRepo1.findById(serviceCaseNo).get();
             btbOafBtb001.setStatus("2");
@@ -155,13 +130,9 @@ public class Btb027WDao {
         return 0;
     }
 
-    public BtbType queryBtbType(Integer serviceCaseNo) {
-        return btbTypeRepository.findBtbType(serviceCaseNo);
+    public BtbIpType queryBtbType(Integer serviceCaseNo) {
+        return btbIpTypeRepository.findBtbType(serviceCaseNo);
     }
-
-//    public BtbOafBtb004 queryType004(Integer serviceCaseNo) {
-//        return btbOafBtbRepo4.findBtbType004(serviceCaseNo);
-//    }
 
     public BtbFirewallApply findByNo(Integer no) {
         return btb027WRepo.findById(no).orElse(null);
@@ -171,4 +142,5 @@ public class Btb027WDao {
         return btb027WRepo.updateApply(no, updateParam.getAccount(), updateParam.getStatus(),
                 updateParam.getRemark(), updateParam.getAccount(), updateParam.getIp());
     }
+
 }

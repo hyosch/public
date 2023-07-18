@@ -2,14 +2,12 @@ package com.alston.dao;
 
 import com.alston.model.BtbOafBtb001Ip;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 
-public interface BtbStatementRepository extends JpaRepository<BtbOafBtb001Ip, Integer>,
-        JpaSpecificationExecutor<BtbOafBtb001Ip> {
+public interface BtbStatementRepository extends JpaRepository<BtbOafBtb001Ip, Integer> {
 
     @Query(value =
             "SELECT * FROM ( " +

@@ -1,10 +1,9 @@
 package com.alston.controller;
 
+import com.alston.dto.BtbIpInfo;
 import com.alston.dto.UpdateParam;
 import com.alston.model.BtbFirewallApply;
 import com.alston.model.BtbOafBtb001Ip;
-import com.alston.model.BtbOafBtb002;
-import com.alston.model.BtbOafBtb004;
 import com.alston.service.Btb027WService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -46,16 +45,10 @@ public class Btb027WController {
         return new ResponseEntity<>(btbIpList, HttpStatus.ACCEPTED);
     }
 
-    @GetMapping("/search/002/{no}")
-    public ResponseEntity<BtbOafBtb002> queryBtb002(@PathVariable Integer no) {
-        BtbOafBtb002 btb002 = btb027WService.queryBtb002(no);
-        return new ResponseEntity<>(btb002, HttpStatus.ACCEPTED);
-    }
-
-    @GetMapping("/search/004/{no}")
-    public ResponseEntity<BtbOafBtb004> queryBtb004(@PathVariable Integer no) {
-        BtbOafBtb004 btb004 = btb027WService.queryBtb004(no);
-        return new ResponseEntity<>(btb004, HttpStatus.ACCEPTED);
+    @GetMapping("/searchIp/{no}")
+    public ResponseEntity<BtbIpInfo> queryBtbInfo(@PathVariable Integer no) {
+        BtbIpInfo btbIpInfo = btb027WService.queryBtbInfo(no);
+        return new ResponseEntity<>(btbIpInfo, HttpStatus.ACCEPTED);
     }
 
     @PostMapping("/update")

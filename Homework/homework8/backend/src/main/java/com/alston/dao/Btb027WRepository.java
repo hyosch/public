@@ -30,5 +30,4 @@ public interface Btb027WRepository extends JpaRepository<BtbFirewallApply, Integ
                         @Param("lastModifiedBy") String lastModifiedBy,
                         @Param("lastModifiedIp") String lastModifiedIp);
 
-
 }
